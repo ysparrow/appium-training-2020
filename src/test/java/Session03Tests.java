@@ -1,6 +1,4 @@
 import com.google.common.io.Files;
-import io.appium.java_client.android.Activity;
-import io.appium.java_client.android.NetworkSpeed;
 import io.appium.java_client.android.PowerACState;
 import io.appium.java_client.serverevents.CustomEvent;
 import io.appium.java_client.serverevents.ServerEvents;
@@ -14,21 +12,87 @@ import org.openqa.selenium.logging.LogEntry;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Session03Tests extends TestBase{
+public class Session03Tests extends TestBase {
 
     @BeforeEach
     void openActivity() throws InterruptedException {
-        driver.startActivity(new Activity("io.appium.android.apis", "io.appium.android.apis.ApiDemos"));
-        Thread.sleep(500);
+//        driver.startActivity(new Activity("io.appium.android.apis", "io.appium.android.apis.ApiDemos"));
+//        Thread.sleep(500);
+    }
+
+    @Test
+    void appTests() {
+
+        System.out.println(driver.isAppInstalled("io.appium.android.apis"));
+        System.out.println(driver.isAppInstalled("com.my.super.app"));
+
+        driver.runAppInBackground(Duration.ofSeconds(3));
+
+        driver.closeApp();
+        driver.launchApp();
+        driver.resetApp();
+
+        driver.activateApp("com.android.calculator2");
+        driver.terminateApp("com.android.calculator2");
+        System.out.println(driver.queryAppState("io.appium.android.apis"));
+
+        Map<String, String> appStrings = driver.getAppStringMap("en", "/home/sparrow/Work/dev/appium-training/Apk_Info.apk");
+
+        for (Map.Entry<String, String> entry : appStrings.entrySet())
+            System.out.println(entry.getKey() +
+                    " = " + entry.getValue());
+
+
+    }
+
+    @Test
+    void power() {
+
+        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
+        driver.setPowerAC(PowerACState.OFF);
+        driver.setPowerAC(PowerACState.ON);
+        driver.setPowerCapacity(12);
+        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
+        driver.setPowerAC(PowerACState.OFF);
+        driver.setPowerCapacity(78);
+        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
+
+    }
+
+    @Test
+    void deviceInteractions() {
+
+        System.out.println(driver.isDeviceLocked());
+        driver.lockDevice();
+        System.out.println(driver.isDeviceLocked());
+        driver.unlockDevice(); //Android only
+        System.out.println(driver.isDeviceLocked());
+        driver.openNotifications(); //Android only
+
+    }
+
+    @Test
+    void perfCounters() {
+        List<String> performanceTypes = driver.getSupportedPerformanceDataTypes();
+        List<List<Object>> performanceData = driver.getPerformanceData("io.appium.android.apis", "memoryinfo", 5);
+    }
+
+    @Test
+    void contexts() {
+        String context = driver.getContext();
+        Set<String> contextNames = driver.getContextHandles();
+        driver.context("NATIVE_APP");
+
     }
 
     @Test
     void screenShot() {
 
-        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
             Files.copy(scrFile,
                     new File(System.currentTimeMillis() + "MobileScreen.png"));
@@ -44,12 +108,11 @@ public class Session03Tests extends TestBase{
 
         Set<String> logTypes = driver.manage().logs().getAvailableLogTypes();
 
-        for( String logType:logTypes) {
-            LogEntries logEntries = driver.manage().logs().get(logType);
-              for (LogEntry entry: logEntries)
-              {
-                  System.out.println("["+logType+"]" +entry);
-              }
+        for (String logType : logTypes) {
+            LogEntries logEntries = driver.manage().logs().get("server");
+            for (LogEntry entry : logEntries) {
+                System.out.println("[server]" + entry);
+            }
         }
     }
 
@@ -75,42 +138,4 @@ public class Session03Tests extends TestBase{
 
     }
 
-    @Test
-    void appTests() {
-
-        System.out.println(driver.isAppInstalled("io.appium.android.apis"));
-        System.out.println(driver.isAppInstalled("com.my.super.app"));
-
-        driver.runAppInBackground(Duration.ofSeconds(3));
-
-        driver.closeApp();
-        driver.launchApp();
-        driver.resetApp();
-
-        driver.activateApp("com.android.calculator2");
-        driver.terminateApp("com.android.calculator2");
-        System.out.println(driver.queryAppState("io.appium.android.apis"));
-
-        Map<String, String> appStrings = driver.getAppStringMap("en", "/home/sparrow/Work/dev/appium-training/Apk_Info.apk");
-
-        for (Map.Entry<String,String> entry : appStrings.entrySet())
-            System.out.println(entry.getKey() +
-                    " = " + entry.getValue());
-
-    }
-
-
-    @Test
-    void power() {
-
-        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
-        driver.setPowerAC(PowerACState.OFF);
-        driver.setPowerAC(PowerACState.ON);
-        driver.setPowerCapacity(12);
-        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
-        driver.setPowerAC(PowerACState.OFF);
-        driver.setPowerCapacity(78);
-        System.out.println("mobile:batteryInfo: " + driver.executeScript("mobile:batteryInfo"));
-
-    }
 }

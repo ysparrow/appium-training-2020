@@ -1,18 +1,19 @@
-
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.touch.offset.PointOption;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.*;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.WebElement;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import java.util.List;
 
-public class Session02Tests extends TestBase{
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
+public class Session02Tests extends TestBase {
 
     @Test
     void webTest() {
@@ -64,7 +65,7 @@ public class Session02Tests extends TestBase{
     @Test
     void mutableInteractionTest() {
 
-        //driver.startActivity(new Activity("io.appium.android.apis", "io.appium.android.apis.view.TextFields"));
+        //  driver.startActivity(new Activity("io.appium.android.apis", "io.appium.android.apis.view.TextFields"));
 
         //Pseudo Scroll using TouchAction
         AndroidElement listView = (AndroidElement) driver.findElementById("android:id/list");
@@ -76,8 +77,8 @@ public class Session02Tests extends TestBase{
                 .perform();
 
         wait.until(elementToBeClickable(
-                                MobileBy.AndroidUIAutomator(
-                                        "new UiSelector().text(\"Views\")"))).click();
+                MobileBy.AndroidUIAutomator(
+                        "new UiSelector().text(\"Views\")"))).click();
 
         //Scroll using mobile scroll via script executor
         driver.executeScript("mobile: scroll", ImmutableMap.of(
@@ -87,18 +88,17 @@ public class Session02Tests extends TestBase{
 
         List<WebElement> textFields = driver.findElementsByClassName("android.widget.EditText");
 
-        for (WebElement field: textFields)
-        {
+        driver.hideKeyboard();
+
+        for (WebElement field : textFields) {
             field.sendKeys("Enter some text ");
         }
 
-        for (WebElement field: textFields)
-        {
+        for (WebElement field : textFields) {
             field.sendKeys("+ some other");
         }
 
-        for (WebElement field: textFields)
-        {
+        for (WebElement field : textFields) {
             field.clear();
         }
 

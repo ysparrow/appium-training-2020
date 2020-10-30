@@ -12,7 +12,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FirstAppiumTest {
+public class FirstAndroidTest {
 
     private static WebDriverWait wait;
     private static AndroidDriver<WebElement> driver;

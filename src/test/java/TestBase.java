@@ -24,8 +24,8 @@ public class TestBase {
         dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, "8.0");
 //        dc.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
 //        dc.setCapability("appium:chromeOptions", ImmutableMap.of("w3c", false));
-//        dc.setCapability(MobileCapabilityType.APP, "/home/sparrow/Work/dev/appium-training/ApiDemos-debug.apk");
-//        dc.setCapability("otherApps", "/home/sparrow/Work/dev/appium-training/Apk_Info.apk");
+//        dc.setCapability(MobileCapabilityType.APP, "/Users/yaro/dev/appium-training/ApiDemos-debug.apk");
+//        dc.setCapability("otherApps", "/Users/yaro/dev/appium-training/Apk_Info.apk");
         dc.setCapability("appPackage", "io.appium.android.apis");
         dc.setCapability("appActivity", "io.appium.android.apis.ApiDemos");
 
